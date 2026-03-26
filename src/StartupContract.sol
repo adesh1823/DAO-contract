@@ -16,6 +16,12 @@ contract StartupContract {
 
     StartupToken public startupToken;
     mapping(address => bool) public hasClaimed;
+    mapping(address => bool) public hasExited;
+
+    // Exit pool state
+    uint256 public exitPool;
+    uint256 public exitValuation;
+    bool public exitOpen;
 
     constructor(
         address _founder,
@@ -35,9 +41,10 @@ contract StartupContract {
 
         totalGovSupplySnapshot = govToken.getPastTotalSupply(snapshotBlock);
 
-        // Deploy StartupToken, owned by this contract
         startupToken = new StartupToken("Startup Equity Token", "SET", address(this));
     }
+
+    // ── existing functions ────────────────────────────────────────────
 
     function claimTokens() external {
         require(!hasClaimed[msg.sender], "Already claimed");
@@ -55,13 +62,76 @@ contract StartupContract {
         return address(startupToken);
     }
 
-
     function withdrawFunding() external {
         require(msg.sender == founder, "Only founder can withdraw");
         uint256 balance = address(this).balance;
         require(balance > 0, "No funds to withdraw");
 
-       (bool success, ) = founder.call{value: balance}("");
-require(success, "Transfer failed");
+        (bool success, ) = founder.call{value: balance}("");
+        require(success, "Transfer failed");
+    }
+
+    // ── exit functions ────────────────────────────────────────────────
+
+    /// @dev Founder deposits ETH to open an exit window for investors.
+    ///      exitValuation is the current valuation of the startup.
+    ///      ETH received = (startupTokens held / totalSupply) * exitPool
+    function openExit(uint256 _exitValuation) external payable {
+        require(msg.sender == founder, "Only founder can open exit");
+        require(!exitOpen, "Exit already open");
+        require(msg.value > 0, "Must deposit ETH for exit pool");
+        require(_exitValuation > 0, "Invalid exit valuation");
+
+        exitPool = msg.value;
+        exitValuation = _exitValuation;
+        exitOpen = true;
+    }
+
+    /// @dev Investor burns their startup tokens and receives ETH
+    ///      proportional to their ownership at the exit valuation.
+    function exit() external {
+        require(exitOpen, "Exit not open");
+        require(!hasExited[msg.sender], "Already exited");
+
+        uint256 investorTokens = startupToken.balanceOf(msg.sender);
+        require(investorTokens > 0, "No startup tokens to exit");
+
+        uint256 totalSupply = startupToken.totalSupply();
+
+        uint256 ethAmount = (investorTokens * exitPool) / totalSupply;
+        require(ethAmount > 0, "Nothing to claim");
+        require(address(this).balance >= ethAmount, "Insufficient exit pool");
+
+        // Burn tokens first — checks-effects-interactions pattern
+        startupToken.burnFrom(msg.sender, investorTokens);
+        hasExited[msg.sender] = true;
+        exitPool -= ethAmount; // reduce pool after each exit to keep math correct
+
+        (bool success, ) = msg.sender.call{value: ethAmount}("");
+        require(success, "Transfer failed");
+    }
+
+    /// @dev Founder closes exit and reclaims any unclaimed ETH
+    ///      from investors who never called exit()
+    function closeExit() external {
+        require(msg.sender == founder, "Only founder can close exit");
+        require(exitOpen, "No open exit");
+
+        exitOpen = false;
+        uint256 remaining = address(this).balance;
+
+        if (remaining > 0) {
+            (bool success, ) = founder.call{value: remaining}("");
+            require(success, "Transfer failed");
+        }
+    }
+
+    /// @dev View how much ETH an investor would receive if they exit now
+    function getExitAmount(address investor) external view returns (uint256) {
+        if (!exitOpen) return 0;
+        uint256 investorTokens = startupToken.balanceOf(investor);
+        if (investorTokens == 0) return 0;
+        uint256 totalSupply = startupToken.totalSupply();
+        return (investorTokens * exitPool) / totalSupply;
     }
 }
