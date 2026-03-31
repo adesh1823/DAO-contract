@@ -1,0 +1,146 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --tensor-cyan: #03e1ff;
+  --tensor-green: #00ffbd;
+  --tensor-bg: #000000;
+  --tensor-border: #111111;
+  --tensor-surface: #050505;
+  --font-mono: 'Roboto Mono', monospace;
+}
+
+body {
+  background-color: var(--tensor-bg);
+  color: #f0f0f0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+@layer utilities {
+  .tensor-grid {
+    border-top: 1px solid var(--tensor-border);
+    border-left: 1px solid var(--tensor-border);
+  }
+
+  .tensor-cell {
+    border-right: 1px solid var(--tensor-border);
+    border-bottom: 1px solid var(--tensor-border);
+    padding: 0.75rem 1rem;
+    transition: background-color 0.15s ease;
+  }
+
+  .tensor-cell:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+
+  .tensor-header {
+    background-color: #080808;
+    color: #555;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    font-family: var(--font-mono);
+  }
+
+  .tensor-value {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    color: white;
+  }
+
+  .tensor-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: #555;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .neon-cyan-text { color: var(--tensor-cyan); }
+  .neon-green-text { color: var(--tensor-green); }
+  
+  .neon-cyan-glow {
+    text-shadow: 0 0 10px rgba(3, 225, 255, 0.3);
+  }
+
+  .pro-card {
+    background: var(--tensor-surface);
+    border: 1px solid var(--tensor-border);
+    border-radius: 4px; /* Strictly more geometric/professional than rounded-2xl */
+    overflow: hidden;
+  }
+
+  .input-field {
+    width: 100%;
+    background: #080808;
+    border: 1px solid #222;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    color: white;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    transition: all 0.2s;
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: var(--tensor-cyan);
+    box-shadow: 0 0 0 1px rgba(3, 225, 255, 0.2);
+  }
+
+  .btn-pro {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: 4px;
+    transition: all 0.2s;
+    font-family: var(--font-mono);
+  }
+
+  .btn-pro-cyan {
+    background: var(--tensor-cyan);
+    color: black;
+  }
+  .btn-pro-cyan:hover:not(:disabled) {
+    background: #4adeff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(3, 225, 255, 0.3);
+  }
+
+  .btn-pro-outline {
+    background: transparent;
+    border: 1px solid #333;
+    color: #999;
+  }
+  .btn-pro-outline:hover:not(:disabled) {
+    border-color: #555;
+    color: white;
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+/* Custom Scrollbar for Pro Feel */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--tensor-cyan);
+}
