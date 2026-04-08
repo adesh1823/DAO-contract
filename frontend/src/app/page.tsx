@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+<<<<<<< HEAD
 import { ArrowRight, ShieldCheck, Zap, TrendingUp } from 'lucide-react'
 import { StatsBar } from '@/components/StatsBar'
 import { useProposals } from '@/hooks/useProposals'
@@ -8,6 +9,17 @@ import { useBalance } from 'wagmi'
 import { VENTUREDAO_ADDRESS } from '@/constants/abis'
 import { formatEther } from 'viem'
 import { CurrencyDisplay } from '@/components/CurrencyDisplay'
+=======
+import { StatsBar } from '@/components/StatsBar'
+import { useProposals } from '@/hooks/useProposals'
+import { useBalance } from 'wagmi'
+import { formatEther } from 'viem'
+import { CurrencyDisplay } from '@/components/CurrencyDisplay'
+import { motion } from 'framer-motion'
+import { GlitchText } from '@/components/GlitchText'
+import { VENTUREDAO_ADDRESS } from '@/constants/abis'
+import { ArrowRight } from 'lucide-react'
+>>>>>>> 28bd269 (f1)
 
 export default function LandingPage() {
   const { proposals, isLoading: isLoadingProposals } = useProposals()
@@ -33,7 +45,16 @@ export default function LandingPage() {
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 py-24 relative z-10 flex flex-col justify-center min-h-[calc(100vh-80px)]">
         
         {/* Asymmetric Hero Section */}
+<<<<<<< HEAD
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative">
+=======
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.1, ease: 'easeOut' }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative"
+        >
+>>>>>>> 28bd269 (f1)
           
           {/* Left Hero Block */}
           <div className="lg:col-span-7 relative z-20">
@@ -46,9 +67,15 @@ export default function LandingPage() {
             </div>
             
             <h1 className="text-6xl md:text-[5.5rem] font-black text-white leading-[0.9] tracking-tighter uppercase mb-8 relative">
+<<<<<<< HEAD
               <span className="relative z-10 block">Venture</span>
               <span className="relative z-10 block text-transparent bg-clip-text bg-gradient-to-r from-[#03e1ff] to-[#00ffbd] drop-shadow-[0_0_20px_rgba(3,225,255,0.3)]">
                 Syndicate
+=======
+              <span className="relative z-10 block"><GlitchText text="Venture" /></span>
+              <span className="relative z-10 block text-transparent bg-clip-text bg-gradient-to-r from-[#03e1ff] to-[#00ffbd] drop-shadow-[0_0_20px_rgba(3,225,255,0.3)]">
+                <GlitchText text="Syndicate" />
+>>>>>>> 28bd269 (f1)
               </span>
               <div className="absolute top-0 left-[-40px] w-1 h-full bg-gradient-to-b from-[#03e1ff] via-[#00ffbd] to-transparent" />
             </h1>
@@ -65,7 +92,11 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-[#03e1ff]/20 to-transparent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
                 <div className="relative z-10 flex flex-col">
                   <span className="text-[9px] font-bold font-mono text-sky-400 group-hover:text-[#03e1ff] transition-colors uppercase mb-1">Engage Capital</span>
+<<<<<<< HEAD
                   <span className="text-sm font-bold text-white tracking-widest uppercase">Investor Nexus</span>
+=======
+                  <span className="text-sm font-bold text-white tracking-widest uppercase"><GlitchText text="Investor Nexus" /></span>
+>>>>>>> 28bd269 (f1)
                 </div>
                 <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 group-hover:text-[#03e1ff] transition-all relative z-10" />
               </Link>
@@ -77,7 +108,11 @@ export default function LandingPage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-[#00ffbd]/20 to-transparent translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
                 <div className="relative z-10 flex flex-col">
                   <span className="text-[9px] font-bold font-mono text-sky-400 group-hover:text-[#00ffbd] transition-colors uppercase mb-1">Initialize Stream</span>
+<<<<<<< HEAD
                   <span className="text-sm font-bold text-white tracking-widest uppercase">Founder Forge</span>
+=======
+                  <span className="text-sm font-bold text-white tracking-widest uppercase"><GlitchText text="Founder Forge" /></span>
+>>>>>>> 28bd269 (f1)
                 </div>
                 <ArrowRight className="w-5 h-5 text-white group-hover:translate-x-1 group-hover:text-[#00ffbd] transition-all relative z-10" />
               </Link>
@@ -144,7 +179,11 @@ export default function LandingPage() {
                <div className="absolute -inset-1 border border-white/[0.02] pointer-events-none transform translate-x-4 -translate-y-4" />
              </div>
           </div>
+<<<<<<< HEAD
         </div>
+=======
+        </motion.div>
+>>>>>>> 28bd269 (f1)
       </main>
 
       {/* Floating Bottom Ticker / Stats */}

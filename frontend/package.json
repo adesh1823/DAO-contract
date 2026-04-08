@@ -12,10 +12,18 @@
     "@tanstack/react-query": "^5.91.2",
     "clsx": "^2.1.1",
     "ethers": "^6.16.0",
+<<<<<<< HEAD
+=======
+    "framer-motion": "^12.38.0",
+>>>>>>> 28bd269 (f1)
     "lucide-react": "^0.577.0",
     "next": "16.2.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
+<<<<<<< HEAD
+=======
+    "react-markdown": "^10.1.0",
+>>>>>>> 28bd269 (f1)
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "viem": "^2.47.5",

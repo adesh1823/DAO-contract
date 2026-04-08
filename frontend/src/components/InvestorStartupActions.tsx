@@ -135,7 +135,11 @@ export function InvestorStartupActions({ address, initialValuation }: { address:
             <p className="text-[9px] font-bold text-sky-300 uppercase mb-2 tracking-wide">Exit Yield</p>
             <p className="text-sm font-mono text-white leading-none">
               {Number(exitAmount ? formatEther(exitAmount as bigint) : '0').toFixed(4)}
+<<<<<<< HEAD
               <span className="text-[9px] text-[#444] ml-1">ETH</span>
+=======
+              <span className="text-[9px] text-[#81d4fa]/50 ml-1">ETH</span>
+>>>>>>> 28bd269 (f1)
             </p>
           </div>
           <div className="p-4 border-r border-[#111] bg-black">

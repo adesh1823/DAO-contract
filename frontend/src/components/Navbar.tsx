@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import Link from 'next/link'
 import { ConnectButton } from './ConnectButton'
 import { Diamond } from 'lucide-react'
@@ -5,6 +6,23 @@ import { Diamond } from 'lucide-react'
 export function Navbar() {
   return (
     <nav className="border-b border-[#111] bg-black sticky top-0 z-50 h-14">
+=======
+'use client'
+
+import Link from 'next/link'
+import { ConnectButton } from './ConnectButton'
+import { Diamond } from 'lucide-react'
+import { motion } from 'framer-motion'
+
+export function Navbar() {
+  return (
+    <motion.nav 
+      initial={{ y: -50, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="border-b border-white/5 bg-black/40 backdrop-blur-xl sticky top-0 z-50 h-14 shadow-lg"
+    >
+>>>>>>> 28bd269 (f1)
       <div className="max-w-full mx-auto h-full">
         <div className="flex justify-between items-center h-full">
           <div className="flex items-center h-full">
@@ -41,6 +59,10 @@ export function Navbar() {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
     </nav>
+=======
+    </motion.nav>
+>>>>>>> 28bd269 (f1)
   )
 }

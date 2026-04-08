@@ -3,9 +3,27 @@
 import { useProposals } from '@/hooks/useProposals'
 import Link from 'next/link'
 import { formatEther } from 'viem'
+<<<<<<< HEAD
 import { ArrowRight, Loader2, CheckCircle, Clock, XCircle, Zap } from 'lucide-react'
 import { StartupAvatar } from '@/components/StartupAvatar'
 import { CurrencyDisplay } from '@/components/CurrencyDisplay'
+=======
+import { Zap, Loader2 } from 'lucide-react'
+import { StartupAvatar } from '@/components/StartupAvatar'
+import { CurrencyDisplay } from '@/components/CurrencyDisplay'
+import { motion, Variants } from 'framer-motion'
+import { ProposalCard } from '@/components/ProposalCard'
+
+const containerVars: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1 } }
+}
+
+const itemVars: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } }
+}
+>>>>>>> 28bd269 (f1)
 
 export function ProposalList({ filterFounder }: { filterFounder?: `0x${string}` }) {
   const { proposals, isLoading } = useProposals()
@@ -33,6 +51,7 @@ export function ProposalList({ filterFounder }: { filterFounder?: `0x${string}` 
   }
 
   return (
+<<<<<<< HEAD
     <div className="flex flex-col gap-1">
       {filtered.map((proposal) => {
         const now = Math.floor(Date.now() / 1000)
@@ -119,5 +138,12 @@ export function ProposalList({ filterFounder }: { filterFounder?: `0x${string}` 
         )
       })}
     </div>
+=======
+    <motion.div variants={containerVars} initial="hidden" animate="show" className="flex flex-col gap-2 max-w-5xl mx-auto w-full">
+      {filtered.map((proposal) => (
+        <ProposalCard key={proposal.id} proposal={proposal} itemVars={itemVars} />
+      ))}
+    </motion.div>
+>>>>>>> 28bd269 (f1)
   )
 }

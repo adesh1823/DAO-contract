@@ -5,10 +5,19 @@ import { useReadContract, useWriteContract, useAccount } from 'wagmi'
 import { VENTUREDAO_ADDRESS, VENTUREDAO_ABI, STARTUPCONTRACT_ABI } from '@/constants/abis'
 import { formatEther, parseEther } from 'viem'
 import { useState, useEffect } from 'react'
+<<<<<<< HEAD
 import { Loader2, ThumbsUp, ThumbsDown, Bot, Play, LogOut, ArrowLeft, Info } from 'lucide-react'
 import Link from 'next/link'
 import { FounderStartupActions } from '@/components/FounderStartupActions'
 import { InvestorStartupActions } from '@/components/InvestorStartupActions'
+=======
+import ReactMarkdown from 'react-markdown'
+import { Loader2, ThumbsUp, ThumbsDown, Bot, Play, LogOut, ArrowLeft, Info, Download, MessageSquare, Send, X } from 'lucide-react'
+import Link from 'next/link'
+import { FounderStartupActions } from '@/components/FounderStartupActions'
+import { InvestorStartupActions } from '@/components/InvestorStartupActions'
+import { CurrencyDisplay } from '@/components/CurrencyDisplay'
+>>>>>>> 28bd269 (f1)
 
 export default function ProposalDetail() {
   const params = useParams()
@@ -40,6 +49,7 @@ export default function ProposalDetail() {
   const { writeContract: writeExecute, isPending: isExecuting } = useWriteContract()
 
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'
+<<<<<<< HEAD
 
   useEffect(() => {
     if (proposalId) {
@@ -47,13 +57,102 @@ export default function ProposalDetail() {
         .then(res => res.json())
         .then(data => {
           if (data.status === 'complete' || data.status === 'completed') {
+=======
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [backendStartupId, setBackendStartupId] = useState<string | null>(null)
+
+  const [messages, setMessages] = useState<{role: 'user' | 'ai', content: string}[]>([])
+  const [chatInput, setChatInput] = useState('')
+  const [isChatLoading, setIsChatLoading] = useState(false)
+  const [isChatOpen, setIsChatOpen] = useState(false)
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!chatInput.trim() || !backendStartupId) return
+    
+    const userMsg = chatInput.trim()
+    setMessages(prev => [...prev, {role: 'user', content: userMsg}])
+    setChatInput('')
+    setIsChatLoading(true)
+    
+    try {
+      const res = await fetch(`${BACKEND_URL}/chat/${backendStartupId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: userMsg })
+      })
+      if (!res.ok) throw new Error('Chat API failed')
+      const data = await res.json()
+      setMessages(prev => [...prev, {role: 'ai', content: data.answer}])
+    } catch (err) {
+      console.error(err)
+      setMessages(prev => [...prev, {role: 'ai', content: 'Connection error while communicating with AI agent.'}])
+    } finally {
+      setIsChatLoading(false)
+    }
+  }
+
+  const handleDownloadPDF = async () => {
+    if (!backendStartupId) return
+    try {
+      setIsDownloading(true)
+      const res = await fetch(`${BACKEND_URL}/reports/${backendStartupId}`, {
+        method: 'POST'
+      })
+      if (!res.ok) throw new Error('Failed to generate or fetch PDF')
+      
+      const blob = await res.blob()
+      const url = window.URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', `VentureDAO_Report_Prop${proposalId}.pdf`)
+      document.body.appendChild(link)
+      link.click()
+      link.parentNode?.removeChild(link)
+    } catch (err) {
+      console.error(err)
+      alert("Failed to download report.")
+    } finally {
+      setIsDownloading(false)
+    }
+  }
+
+  useEffect(() => {
+    if (rawProposal) {
+      const p = rawProposal as unknown as [string, bigint, bigint, string, bigint, bigint, bigint, bigint, bigint, boolean, string, string]
+      const founder = p[0]
+      const description = p[3]
+
+      fetch(`${BACKEND_URL}/startups`)
+        .then(res => res.json())
+        .then((startups: any[]) => {
+          const matched = startups.find(s => 
+            s.description === description && 
+            s.team.toLowerCase() === founder.toLowerCase()
+          )
+          
+          if (matched) {
+            setBackendStartupId(matched.startup_id)
+            return fetch(`${BACKEND_URL}/api/startups/${matched.startup_id}/report/status`)
+          } else {
+            throw new Error('Startup record not found on backend')
+          }
+        })
+        .then(res => res ? res.json() : null)
+        .then(data => {
+          if (data && (data.status === 'complete' || data.status === 'completed')) {
+>>>>>>> 28bd269 (f1)
             setAiReport(data.analysis || data)
           }
         })
         .catch(err => console.error('Failed to fetch AI report:', err))
         .finally(() => setIsReportLoading(false))
     }
+<<<<<<< HEAD
   }, [proposalId])
+=======
+  }, [rawProposal])
+>>>>>>> 28bd269 (f1)
 
   if (!rawProposal) {
     return (
@@ -141,6 +240,7 @@ export default function ProposalDetail() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 border-b border-[#111]">
           <div className="p-6 border-r border-[#111]">
+<<<<<<< HEAD
             <p className="text-[9px] font-bold text-[#444] uppercase mb-2">Funding Requirement</p>
             <p className="text-xl font-mono text-white leading-none">
               {Number(formatEther(proposal.fundingAmount)).toFixed(7)}
@@ -153,6 +253,14 @@ export default function ProposalDetail() {
               {Number(formatEther(proposal.valuation)).toFixed(7)}
               <span className="text-xs text-[#444] ml-2">ETH</span>
             </p>
+=======
+            <p className="text-[9px] font-bold text-[#444] uppercase mb-4">Funding Requirement</p>
+            <CurrencyDisplay value={Number(formatEther(proposal.fundingAmount))} featured={true} />
+          </div>
+          <div className="p-6 border-r border-[#111]">
+            <p className="text-[9px] font-bold text-[#444] uppercase mb-4">Contract Valuation</p>
+            <CurrencyDisplay value={Number(formatEther(proposal.valuation))} featured={true} />
+>>>>>>> 28bd269 (f1)
           </div>
           <div className="p-6 border-r border-[#111]">
             <p className="text-[9px] font-bold text-[#444] uppercase mb-2">Consensus "For"</p>
@@ -212,6 +320,177 @@ export default function ProposalDetail() {
         </div>
       </div>
 
+<<<<<<< HEAD
+=======
+      {/* AI Analysis Section */}
+      <div className="mt-10 mb-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">AI Venture Analysis</h2>
+            <p className="text-[10px] font-bold font-mono text-[#00ffbd] uppercase tracking-widest">Generative Intelligence Report</p>
+          </div>
+          {aiReport && (
+            <button 
+              onClick={handleDownloadPDF}
+              disabled={isDownloading}
+              className="btn-pro btn-pro-cyan h-10 px-6 shrink-0 flex items-center justify-center gap-2"
+            >
+              {isDownloading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
+              {isDownloading ? 'Generating PDF...' : 'Download Full PDF Report'}
+            </button>
+          )}
+        </div>
+
+        <div className="bg-[#111] p-1 border border-[#111]">
+          {isReportLoading ? (
+            <div className="p-12 text-center bg-black">
+              <Loader2 className="w-6 h-6 text-[#03e1ff] animate-spin mx-auto mb-4" />
+              <p className="text-[10px] font-bold font-mono text-sky-400 uppercase tracking-widest">Synthesizing Market Data...</p>
+            </div>
+          ) : !aiReport ? (
+            <div className="p-12 text-center bg-black border border-dashed border-[#333]">
+              <Bot className="w-8 h-8 text-[#444] mx-auto mb-4" />
+              <p className="text-[10px] font-bold font-mono text-[#444] uppercase tracking-widest">Analysis not yet available</p>
+            </div>
+          ) : (
+            <div className="bg-[#050505] p-8 space-y-8">
+              <div>
+                <div className="flex items-center gap-4 mb-3 border-b border-[#111] pb-2">
+                  <p className="text-[10px] font-bold font-mono text-[#03e1ff] uppercase tracking-widest">Executive Summary</p>
+                  {aiReport.score && (
+                    <div className="ml-auto flex items-center gap-2">
+                      <span className="text-[8px] font-bold text-[#444] uppercase tracking-widest">AI Score</span>
+                      <span className="text-sm font-mono font-bold text-[#00ffbd]">{aiReport.score}/10</span>
+                    </div>
+                  )}
+                </div>
+                <div className="text-sm text-gray-300 leading-relaxed markdown-content"><ReactMarkdown>{aiReport.executiveSummary}</ReactMarkdown></div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <p className="text-[10px] font-bold font-mono text-[#03e1ff] uppercase tracking-widest mb-3 border-b border-[#111] pb-2">Market Analysis</p>
+                  <div className="text-sm text-gray-300 leading-relaxed markdown-content"><ReactMarkdown>{aiReport.marketAnalysis}</ReactMarkdown></div>
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold font-mono text-[#03e1ff] uppercase tracking-widest mb-3 border-b border-[#111] pb-2">Team Assessment</p>
+                  <div className="text-sm text-gray-300 leading-relaxed markdown-content"><ReactMarkdown>{aiReport.teamAssessment}</ReactMarkdown></div>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border-t border-[#111] pt-6">
+                <div>
+                  <p className="text-[10px] font-bold font-mono text-amber-500 uppercase tracking-widest mb-3 pb-2">Risk Factors</p>
+                  <div className="text-sm text-amber-500/70 leading-relaxed markdown-content"><ReactMarkdown>{aiReport.riskFactors}</ReactMarkdown></div>
+                </div>
+                <div className="bg-[#00ffbd]/5 p-6 border border-[#00ffbd]/20 rounded-sm">
+                  <p className="text-[10px] font-bold font-mono text-[#00ffbd] uppercase tracking-widest mb-3 pb-2 border-b border-[#00ffbd]/20">Recommendation</p>
+                  <div className="text-sm text-[#00ffbd] leading-relaxed font-bold markdown-content"><ReactMarkdown>{aiReport.recommendation}</ReactMarkdown></div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Interactive Chatbot Section - Floating Widget */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        {isChatOpen && (
+          <div className="mb-4 w-[350px] sm:w-[400px] border border-[#222] bg-[#050505] shadow-[0_0_30px_rgba(0,0,0,0.8)] flex flex-col overflow-hidden rounded-sm animate-in slide-in-from-bottom-5 fade-in duration-300">
+            <div className="p-4 border-b border-[#111] bg-black flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <MessageSquare className="w-4 h-4 text-[#03e1ff]" />
+                <div>
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wider leading-none">Venture Analyst</h3>
+                  <p className="text-[8px] font-bold font-mono text-[#00ffbd] uppercase tracking-widest mt-1">Live AI Data Stream</p>
+                </div>
+              </div>
+              <button onClick={() => setIsChatOpen(false)} className="text-[#444] hover:text-[#03e1ff] transition-colors">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="p-5 h-[350px] overflow-y-auto flex flex-col gap-4 custom-scrollbar bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#111]/30 via-black to-black">
+              {!backendStartupId ? (
+                <div className="m-auto text-center opacity-50">
+                   <Bot className="w-8 h-8 text-[#03e1ff] mx-auto mb-3 opacity-50" />
+                   <p className="text-[10px] font-bold font-mono text-white uppercase tracking-widest">Analyst Offline</p>
+                   <p className="text-[9px] font-mono text-gray-500 uppercase mt-2">Backend connection not established.</p>
+                </div>
+              ) : messages.length === 0 ? (
+                <div className="m-auto text-center opacity-50">
+                  <Bot className="w-8 h-8 text-[#03e1ff] mx-auto mb-3 opacity-50" />
+                  <p className="text-[10px] font-bold font-mono text-white uppercase tracking-widest">Secure Line Opened</p>
+                  <p className="text-[9px] font-mono text-gray-500 uppercase mt-2 max-w-[200px] mx-auto">Ask questions about market size, competitors, or specific risks discovered in the pitch deck.</p>
+                </div>
+              ) : (
+                messages.map((msg, i) => (
+                  <div key={i} className={`flex w-full ${msg.role === 'user' ? 'justify-end' : 'justify-start gap-2'}`}>
+                    {msg.role === 'ai' && (
+                      <div className="w-7 h-7 rounded-sm bg-[#080808] border border-[#222] flex flex-shrink-0 items-center justify-center mt-1">
+                        <Bot className="w-4 h-4 text-[#00ffbd]" />
+                      </div>
+                    )}
+                    <div className={`max-w-[82%] px-4 py-3 border ${
+                      msg.role === 'user' 
+                        ? 'bg-[#03e1ff]/10 border-[#03e1ff]/30 text-white rounded-tl-xl rounded-tr-xl rounded-bl-xl shadow-[0_0_10px_rgba(3,225,255,0.05)]' 
+                        : 'bg-[#080808] border-[#222] text-gray-300 rounded-tr-xl rounded-br-xl rounded-bl-xl'
+                    }`}>
+                      {msg.role === 'ai' ? (
+                         <div className="text-[13px] leading-relaxed markdown-content overflow-hidden break-words">
+                           <ReactMarkdown>{msg.content}</ReactMarkdown>
+                         </div>
+                      ) : (
+                         <p className="text-[13px] font-medium break-words">{msg.content}</p>
+                      )}
+                    </div>
+                  </div>
+                ))
+              )}
+              {isChatLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-[#080808] border border-[#222] text-gray-300 p-3.5 rounded-tr-md rounded-br-md rounded-bl-md flex items-center gap-3">
+                    <Loader2 className="w-4 h-4 text-[#00ffbd] animate-spin" />
+                    <span className="text-[10px] font-mono uppercase text-[#00ffbd]/70 tracking-widest">Analysing...</span>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <form onSubmit={handleSendMessage} className="p-3 border-t border-[#111] bg-black flex gap-2">
+              <input 
+                type="text" 
+                value={chatInput} 
+                onChange={e => setChatInput(e.target.value)}
+                placeholder="Query the startup's data..."
+                className="flex-1 bg-[#111] border border-[#222] text-sm text-white px-4 py-2.5 rounded-sm focus:outline-none focus:border-[#03e1ff]/50 transition-colors font-mono placeholder:text-gray-600"
+                disabled={isChatLoading || !backendStartupId}
+              />
+              <button 
+                type="submit" 
+                disabled={isChatLoading || !chatInput.trim() || !backendStartupId}
+                className="btn-pro btn-pro-cyan px-5 flex items-center justify-center disabled:opacity-50 disabled:hover:transform-none rounded-sm"
+              >
+                <Send className="w-3.5 h-3.5" />
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* Floating Action Button */}
+        {aiReport && backendStartupId && (
+          <button 
+            onClick={() => setIsChatOpen(!isChatOpen)}
+            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all duration-300 shadow-[0_0_20px_rgba(3,225,255,0.2)] ${
+              isChatOpen 
+                ? 'bg-[#111] border border-[#333] text-gray-400 rotate-90 scale-90' 
+                : 'bg-[#03e1ff] text-black hover:scale-105 hover:shadow-[0_0_30px_rgba(3,225,255,0.4)]'
+            }`}
+          >
+            {isChatOpen ? <X className="w-6 h-6 -rotate-90" /> : <MessageSquare className="w-6 h-6" />}
+          </button>
+        )}
+      </div>
+
+>>>>>>> 28bd269 (f1)
       {/* Startup Management Section */}
       {proposal.executed && proposal.startupContract !== '0x0000000000000000000000000000000000000000' && (
         <div className="mt-20 pt-20 border-t border-[#111]">

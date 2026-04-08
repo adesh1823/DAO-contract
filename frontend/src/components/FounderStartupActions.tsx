@@ -6,6 +6,10 @@ import { STARTUPCONTRACT_ABI } from '@/constants/abis'
 import { formatEther, parseEther } from 'viem'
 import { Loader2, Settings, Lock, Unlock, Copy, ExternalLink, ShieldCheck, Zap } from 'lucide-react'
 import { CurrencyDisplay } from '@/components/CurrencyDisplay'
+<<<<<<< HEAD
+=======
+import { useEthPrice } from '@/hooks/useEthPrice'
+>>>>>>> 28bd269 (f1)
 
 export function FounderStartupActions({ address, valuation: initialValuation }: { address: `0x${string}`, valuation: bigint }) {
   const { writeContract, isPending } = useWriteContract()
@@ -37,19 +41,46 @@ export function FounderStartupActions({ address, valuation: initialValuation }: 
 
   const [inputValuation, setInputValuation] = useState('')
   const [inputPool, setInputPool] = useState('')
+<<<<<<< HEAD
 
   const handleOpenExit = () => {
+=======
+  const [inputCurrency, setInputCurrency] = useState<'USD' | 'ETH'>('USD')
+  const ethPrice = useEthPrice()
+
+  const handleOpenExit = () => {
+    if (!ethPrice && inputCurrency === 'USD') {
+      alert("Fetching ETH price, please wait...")
+      return
+    }
+
+>>>>>>> 28bd269 (f1)
     if (!inputValuation || !inputPool) return
     const val = Number(inputValuation)
     const pool = Number(inputPool)
     if (isNaN(val) || val <= 0 || isNaN(pool) || pool <= 0) return
 
+<<<<<<< HEAD
+=======
+    const finalValuationEth = inputCurrency === 'USD' 
+      ? (val / ethPrice!).toFixed(18) 
+      : inputValuation
+    const finalPoolEth = inputCurrency === 'USD' 
+      ? (pool / ethPrice!).toFixed(18) 
+      : inputPool
+
+>>>>>>> 28bd269 (f1)
     writeContract({
       address,
       abi: STARTUPCONTRACT_ABI,
       functionName: 'openExit',
+<<<<<<< HEAD
       args: [parseEther(inputValuation)],
       value: parseEther(inputPool),
+=======
+      args: [parseEther(finalValuationEth)],
+      value: parseEther(finalPoolEth),
+>>>>>>> 28bd269 (f1)
       chainId: 11155111,
     })
   }
@@ -119,6 +150,7 @@ export function FounderStartupActions({ address, valuation: initialValuation }: 
         <div className="grid grid-cols-3 border border-[#111]">
           <div className="p-4 border-r border-[#111] bg-black">
             <p className="text-[9px] font-bold text-sky-300 uppercase mb-2 tracking-wide">Target Valuation</p>
+<<<<<<< HEAD
             <p className="text-sm font-mono text-white leading-none">
               {Number(formatEther(currentValuation ? (currentValuation as bigint) : initialValuation)).toFixed(4)}
               <span className="text-[9px] text-[#444] ml-1">ETH</span>
@@ -137,6 +169,17 @@ export function FounderStartupActions({ address, valuation: initialValuation }: 
               {Number(exitPool ? formatEther(exitPool as bigint) : '0').toFixed(4)}
               <span className="text-[9px] text-[#00ffbd]/60 ml-1">ETH</span>
             </p>
+=======
+            <CurrencyDisplay value={Number(formatEther(currentValuation ? (currentValuation as bigint) : initialValuation))} />
+          </div>
+          <div className="p-4 border-r border-[#111] bg-black">
+            <p className="text-[9px] font-bold text-sky-300 uppercase mb-2 tracking-wide">Exit Liquidity</p>
+            <CurrencyDisplay value={Number(exitValuation ? formatEther(exitValuation as bigint) : '0')} />
+          </div>
+          <div className="p-4 bg-black">
+            <p className="text-[9px] font-bold text-[#00ffbd] uppercase mb-2 tracking-wide">Remaining Liquidity</p>
+            <CurrencyDisplay value={Number(exitPool ? formatEther(exitPool as bigint) : '0')} />
+>>>>>>> 28bd269 (f1)
           </div>
         </div>
       </div>
@@ -144,6 +187,7 @@ export function FounderStartupActions({ address, valuation: initialValuation }: 
       <div className="p-6 bg-[#030303] mt-auto border-t border-[#111]">
         {!exitOpen ? (
           <div className="space-y-4">
+<<<<<<< HEAD
             <div className="grid grid-cols-1 gap-4">
               <div>
                 <label className="block text-[9px] font-bold text-sky-300 uppercase tracking-widest mb-2">New Exit Valuation (ETH)</label>
@@ -160,6 +204,60 @@ export function FounderStartupActions({ address, valuation: initialValuation }: 
                   value={inputPool} onChange={e => setInputPool(e.target.value)} 
                   className="input-field h-10 px-4" placeholder="0.0000000" 
                 />
+=======
+            <div className="flex justify-end">
+              <div className="flex border border-[#111] bg-black rounded overflow-hidden p-0.5">
+                <button
+                  type="button"
+                  onClick={() => setInputCurrency('USD')}
+                  className={`px-3 py-1 text-[9px] font-bold tracking-widest transition-colors ${inputCurrency === 'USD' ? 'bg-[#03e1ff]/10 text-[#03e1ff]' : 'text-white/40 hover:text-white'}`}
+                >
+                  USD
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setInputCurrency('ETH')}
+                  className={`px-3 py-1 text-[9px] font-bold tracking-widest transition-colors ${inputCurrency === 'ETH' ? 'bg-[#00ffbd]/10 text-[#00ffbd]' : 'text-white/40 hover:text-white'}`}
+                >
+                  ETH
+                </button>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className="block text-[9px] font-bold text-sky-300 uppercase tracking-widest mb-2">New Exit Valuation ({inputCurrency})</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 font-mono text-sm">{inputCurrency === 'USD' ? '$' : 'Ξ'}</span>
+                  <input 
+                    type="number" step={inputCurrency === 'USD' ? "1" : "0.0000001"} min="0"
+                    value={inputValuation} onChange={e => setInputValuation(e.target.value)} 
+                    className="input-field h-10 pl-8" placeholder="0" 
+                  />
+                </div>
+                {inputCurrency === 'USD' && ethPrice && inputValuation && (
+                  <p className="text-[10px] text-[#81d4fa] font-mono mt-1">≈ {(Number(inputValuation) / ethPrice).toFixed(4)} <span className="text-[#81d4fa]/50">ETH</span></p>
+                )}
+                {inputCurrency === 'ETH' && ethPrice && inputValuation && (
+                  <p className="text-[10px] text-[#00ffbd] font-mono mt-1">≈ ${(Number(inputValuation) * ethPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-[#00ffbd]/50">USD</span></p>
+                )}
+              </div>
+              <div>
+                <label className="block text-[9px] font-bold text-sky-300 uppercase tracking-widest mb-2">Deposit Liquidity ({inputCurrency})</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-white/50 font-mono text-sm">{inputCurrency === 'USD' ? '$' : 'Ξ'}</span>
+                  <input 
+                    type="number" step={inputCurrency === 'USD' ? "1" : "0.0000001"} min="0"
+                    value={inputPool} onChange={e => setInputPool(e.target.value)} 
+                    className="input-field h-10 pl-8" placeholder="0" 
+                  />
+                </div>
+                {inputCurrency === 'USD' && ethPrice && inputPool && (
+                  <p className="text-[10px] text-[#81d4fa] font-mono mt-1">≈ {(Number(inputPool) / ethPrice).toFixed(4)} <span className="text-[#81d4fa]/50">ETH</span></p>
+                )}
+                {inputCurrency === 'ETH' && ethPrice && inputPool && (
+                  <p className="text-[10px] text-[#00ffbd] font-mono mt-1">≈ ${(Number(inputPool) * ethPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-[#00ffbd]/50">USD</span></p>
+                )}
+>>>>>>> 28bd269 (f1)
               </div>
             </div>
             <button 
