@@ -12,12 +12,9 @@
 
 body {
   background-color: var(--tensor-bg);
-<<<<<<< HEAD
-=======
   background: radial-gradient(circle at top, rgba(3, 225, 255, 0.05) 0%, transparent 50%),
               radial-gradient(circle at bottom right, rgba(0, 255, 189, 0.03) 0%, transparent 40%),
               var(--tensor-bg);
->>>>>>> 28bd269 (f1)
   color: #f0f0f0;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -75,8 +72,6 @@ body {
     text-shadow: 0 0 10px rgba(3, 225, 255, 0.3);
   }
 
-<<<<<<< HEAD
-=======
   .markdown-content p {
     margin-bottom: 0.75rem;
     margin-top: 0;
@@ -100,7 +95,6 @@ body {
     margin-bottom: 0.25rem;
   }
 
->>>>>>> 28bd269 (f1)
   .pro-card {
     background: var(--tensor-surface);
     border: 1px solid var(--tensor-border);
@@ -159,8 +153,6 @@ body {
     color: white;
     background: rgba(255, 255, 255, 0.03);
   }
-<<<<<<< HEAD
-=======
 
   /* Sci-Fi Glass Panels */
   .glass-panel {
@@ -181,7 +173,6 @@ body {
     border: 1px solid rgba(3, 225, 255, 0.2);
     box-shadow: 0 10px 40px -10px rgba(3, 225, 255, 0.15), inset 0 0 0 1px rgba(255,255,255,0.02);
   }
->>>>>>> 28bd269 (f1)
 }
 
 /* Custom Scrollbar for Pro Feel */

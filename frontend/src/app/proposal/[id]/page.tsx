@@ -5,19 +5,12 @@ import { useReadContract, useWriteContract, useAccount } from 'wagmi'
 import { VENTUREDAO_ADDRESS, VENTUREDAO_ABI, STARTUPCONTRACT_ABI } from '@/constants/abis'
 import { formatEther, parseEther } from 'viem'
 import { useState, useEffect } from 'react'
-<<<<<<< HEAD
-import { Loader2, ThumbsUp, ThumbsDown, Bot, Play, LogOut, ArrowLeft, Info } from 'lucide-react'
-import Link from 'next/link'
-import { FounderStartupActions } from '@/components/FounderStartupActions'
-import { InvestorStartupActions } from '@/components/InvestorStartupActions'
-=======
 import ReactMarkdown from 'react-markdown'
 import { Loader2, ThumbsUp, ThumbsDown, Bot, Play, LogOut, ArrowLeft, Info, Download, MessageSquare, Send, X } from 'lucide-react'
 import Link from 'next/link'
 import { FounderStartupActions } from '@/components/FounderStartupActions'
 import { InvestorStartupActions } from '@/components/InvestorStartupActions'
 import { CurrencyDisplay } from '@/components/CurrencyDisplay'
->>>>>>> 28bd269 (f1)
 
 export default function ProposalDetail() {
   const params = useParams()
@@ -49,15 +42,6 @@ export default function ProposalDetail() {
   const { writeContract: writeExecute, isPending: isExecuting } = useWriteContract()
 
   const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001'
-<<<<<<< HEAD
-
-  useEffect(() => {
-    if (proposalId) {
-      fetch(`${BACKEND_URL}/api/startups/${proposalId}/report/status`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === 'complete' || data.status === 'completed') {
-=======
   const [isDownloading, setIsDownloading] = useState(false)
   const [backendStartupId, setBackendStartupId] = useState<string | null>(null)
 
@@ -141,18 +125,13 @@ export default function ProposalDetail() {
         .then(res => res ? res.json() : null)
         .then(data => {
           if (data && (data.status === 'complete' || data.status === 'completed')) {
->>>>>>> 28bd269 (f1)
             setAiReport(data.analysis || data)
           }
         })
         .catch(err => console.error('Failed to fetch AI report:', err))
         .finally(() => setIsReportLoading(false))
     }
-<<<<<<< HEAD
-  }, [proposalId])
-=======
   }, [rawProposal])
->>>>>>> 28bd269 (f1)
 
   if (!rawProposal) {
     return (
@@ -240,27 +219,12 @@ export default function ProposalDetail() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 border-b border-[#111]">
           <div className="p-6 border-r border-[#111]">
-<<<<<<< HEAD
-            <p className="text-[9px] font-bold text-[#444] uppercase mb-2">Funding Requirement</p>
-            <p className="text-xl font-mono text-white leading-none">
-              {Number(formatEther(proposal.fundingAmount)).toFixed(7)}
-              <span className="text-xs text-[#444] ml-2">ETH</span>
-            </p>
-          </div>
-          <div className="p-6 border-r border-[#111]">
-            <p className="text-[9px] font-bold text-[#444] uppercase mb-2">Contract Valuation</p>
-            <p className="text-xl font-mono text-white leading-none">
-              {Number(formatEther(proposal.valuation)).toFixed(7)}
-              <span className="text-xs text-[#444] ml-2">ETH</span>
-            </p>
-=======
             <p className="text-[9px] font-bold text-[#444] uppercase mb-4">Funding Requirement</p>
             <CurrencyDisplay value={Number(formatEther(proposal.fundingAmount))} featured={true} />
           </div>
           <div className="p-6 border-r border-[#111]">
             <p className="text-[9px] font-bold text-[#444] uppercase mb-4">Contract Valuation</p>
             <CurrencyDisplay value={Number(formatEther(proposal.valuation))} featured={true} />
->>>>>>> 28bd269 (f1)
           </div>
           <div className="p-6 border-r border-[#111]">
             <p className="text-[9px] font-bold text-[#444] uppercase mb-2">Consensus "For"</p>
@@ -320,8 +284,6 @@ export default function ProposalDetail() {
         </div>
       </div>
 
-<<<<<<< HEAD
-=======
       {/* AI Analysis Section */}
       <div className="mt-10 mb-10">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -490,7 +452,6 @@ export default function ProposalDetail() {
         )}
       </div>
 
->>>>>>> 28bd269 (f1)
       {/* Startup Management Section */}
       {proposal.executed && proposal.startupContract !== '0x0000000000000000000000000000000000000000' && (
         <div className="mt-20 pt-20 border-t border-[#111]">

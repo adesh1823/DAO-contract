@@ -7,10 +7,7 @@ import { ProposalList } from '@/components/ProposalList'
 import { useProposals } from '@/hooks/useProposals'
 import { FounderStartupActions } from '@/components/FounderStartupActions'
 import { AlertCircle, Rocket, LayoutDashboard, History } from 'lucide-react'
-<<<<<<< HEAD
-=======
 import { motion } from 'framer-motion'
->>>>>>> 28bd269 (f1)
 
 export default function FounderDashboard() {
   const { isConnected, address } = useAccount()
@@ -28,16 +25,12 @@ export default function FounderDashboard() {
   const fundedStartups = myProposals.filter(p => p.executed)
 
   return (
-<<<<<<< HEAD
-    <div className="max-w-6xl mx-auto px-6 py-10">
-=======
     <motion.div 
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="max-w-6xl mx-auto px-6 py-10"
     >
->>>>>>> 28bd269 (f1)
       <div className="mb-12 border-b border-[#111] pb-8 flex justify-between items-end">
         <div>
           <h1 className="text-xl font-bold text-white uppercase tracking-widest mb-2 font-mono">Operations: Founder Portal</h1>
@@ -78,10 +71,6 @@ export default function FounderDashboard() {
 
         </div>
       )}
-<<<<<<< HEAD
-    </div>
-=======
     </motion.div>
->>>>>>> 28bd269 (f1)
   )
 }

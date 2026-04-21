@@ -4,10 +4,7 @@ import { useState } from 'react'
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi'
 import { VENTUREDAO_ADDRESS, VENTUREDAO_ABI } from '@/constants/abis'
 import { parseEther } from 'viem'
-<<<<<<< HEAD
-=======
 import { useEthPrice } from '@/hooks/useEthPrice'
->>>>>>> 28bd269 (f1)
 import { Loader2, UploadCloud, Rocket } from 'lucide-react'
 
 export function CreateProposalForm({ onSuccess }: { onSuccess: () => void }) {
@@ -17,12 +14,9 @@ export function CreateProposalForm({ onSuccess }: { onSuccess: () => void }) {
   const [description, setDescription] = useState('')
   const [file, setFile] = useState<File | null>(null)
   
-<<<<<<< HEAD
-=======
   const [inputCurrency, setInputCurrency] = useState<'USD' | 'ETH'>('USD')
   const ethPrice = useEthPrice()
   
->>>>>>> 28bd269 (f1)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysisReport, setAnalysisReport] = useState<any>(null)
 
@@ -94,8 +88,6 @@ export function CreateProposalForm({ onSuccess }: { onSuccess: () => void }) {
   }
 
   const confirmOnChain = () => {
-<<<<<<< HEAD
-=======
     if (!ethPrice && inputCurrency === 'USD') {
       alert("Fetching ETH price, please wait...")
       return
@@ -108,16 +100,11 @@ export function CreateProposalForm({ onSuccess }: { onSuccess: () => void }) {
       ? (Number(valuation) / ethPrice!).toFixed(18) 
       : valuation
 
->>>>>>> 28bd269 (f1)
     writeContract({
       address: VENTUREDAO_ADDRESS,
       abi: VENTUREDAO_ABI,
       functionName: 'submitProposal',
-<<<<<<< HEAD
-      args: [address as `0x${string}`, parseEther(fundingAmount), parseEther(valuation), description],
-=======
       args: [address as `0x${string}`, parseEther(finalFundingEth), parseEther(finalValuationEth), description],
->>>>>>> 28bd269 (f1)
       chainId: 11155111,
     })
   }
@@ -137,26 +124,6 @@ export function CreateProposalForm({ onSuccess }: { onSuccess: () => void }) {
       <div className="p-6">
         {!analysisReport ? (
           <form onSubmit={handleAnalyzeAndSubmit} className="space-y-6">
-<<<<<<< HEAD
-            <div className="grid grid-cols-2 border border-[#111]">
-              <div className="p-4 border-r border-[#111]">
-                <label className="block text-[9px] font-bold text-sky-300 uppercase mb-2">Funding Goal (ETH)</label>
-                <input
-                  type="number" step="0.01" min="0" required
-                  value={fundingAmount} onChange={e => setFundingAmount(e.target.value)}
-                  className="input-field h-10"
-                  placeholder="0.00"
-                />
-              </div>
-              <div className="p-4">
-                <label className="block text-[9px] font-bold text-sky-300 uppercase mb-2">Valuation (ETH)</label>
-                <input
-                  type="number" step="0.01" min="0" required
-                  value={valuation} onChange={e => setValuation(e.target.value)}
-                  className="input-field h-10"
-                  placeholder="0.00"
-                />
-=======
             <div className="flex justify-end mb-2">
               <div className="flex border border-[#111] bg-black rounded overflow-hidden p-0.5">
                 <button
@@ -211,7 +178,6 @@ export function CreateProposalForm({ onSuccess }: { onSuccess: () => void }) {
                 {inputCurrency === 'ETH' && ethPrice && valuation && (
                   <p className="text-[10px] text-[#00ffbd] font-mono mt-2">≈ ${(Number(valuation) * ethPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-[#00ffbd]/50">USD</span></p>
                 )}
->>>>>>> 28bd269 (f1)
               </div>
             </div>
             
